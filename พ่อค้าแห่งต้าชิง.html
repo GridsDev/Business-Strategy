@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ถอดรหัส 15 กลยุทธ์มหาอำมาตย์พ่อค้า จากซีรีส์ "พ่อค้าแห่งต้าชิง"</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Google Fonts: Sarabun & Prompt -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+        }
+        h1, h2, h3, h4, h5, h6, .font-prompt {
+            font-family: 'Prompt', sans-serif;
+        }
+        [x-cloak] { display: none !important; }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #020617;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #d97706;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen selection:bg-amber-500 selection:text-slate-950" x-data="strategyApp()">
+
+    <header class="relative bg-gradient-to-r from-slate-900 via-amber-950/40 to-slate-900 border-b border-amber-500/20 py-12 px-4 shadow-2xl overflow-hidden">
+        <div class="absolute -right-20 -top-20 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="max-w-6xl mx-auto text-center relative z-10">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-xs font-semibold tracking-widest text-amber-400 uppercase bg-amber-500/10 rounded-full border border-amber-500/35">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                Legend of the Magnate • คู่มือวิเคราะห์เชิงธุรกิจ
+            </div>
+            <h1 class="text-3xl md:text-5xl font-bold tracking-tight text-white mb-4">
+                ถอดรหัส 15 กลยุทธ์มหาอำมาตย์พ่อค้า
+            </h1>
+            <p class="text-slate-400 max-w-2xl mx-auto text-base md:text-lg mb-8">
+                เรียนรู้คัมภีร์การค้า การต่อรอง และการเอาตัวรอดจากซีรีส์ระดับตำนาน "พ่อค้าแห่งต้าชิง" ย่อยเนื้อหาครบถ้วนพร้อมนำไปปรับใช้จริง
+            </p>
+
+            <!-- Quick Action Bar (Search, Bookmarks, Export) -->
+            <div class="max-w-2xl mx-auto flex flex-col sm:flex-row gap-3 items-center justify-center">
+                <div class="relative flex-1 w-full">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    </span>
+                    <input type="text" x-model="searchQuery" placeholder="ค้นหากลยุทธ์, คีย์เวิร์ด, หรือหมวดหมู่..." class="w-full pl-10 pr-4 py-3 bg-slate-900/90 border border-slate-700 rounded-xl focus:outline-none focus:border-amber-500 text-slate-200 placeholder-slate-500 text-sm shadow-inner transition">
+                </div>
+                
+                <div class="flex gap-2 w-full sm:w-auto">
+                    <!-- Bookmarks Toggle Button -->
+                    <button @click="showBookmarksOnly = !showBookmarksOnly" 
+                        :class="showBookmarksOnly ? 'bg-amber-500 text-slate-950 font-bold border-amber-400' : 'bg-slate-900/90 text-amber-400 border-slate-700 hover:bg-slate-800'"
+                        class="flex-1 sm:flex-none px-4 py-3 text-sm font-medium rounded-xl border transition flex items-center justify-center gap-1.5 whitespace-nowrap">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+                        <span>บันทึกไว้ (<span x-text="bookmarkedIds.length"></span>)</span>
+                    </button>
+
+                    <!-- Export Button -->
+                    <button @click="exportReport()" class="px-4 py-3 bg-slate-900/90 hover:bg-slate-800 text-amber-400 text-sm font-medium rounded-xl border border-slate-700 transition flex items-center justify-center gap-1.5 whitespace-nowrap">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                        <span>ดาวน์โหลดรายงาน</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="sticky top-0 z-30 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 py-3 px-4 shadow-md">
+        <div class="max-w-6xl mx-auto flex overflow-x-auto gap-2 pb-1">
+            <template x-for="cat in categories" :key="cat.id">
+                <button @click="selectedCategory = cat.id; showBookmarksOnly = false;"
+                    :class="selectedCategory === cat.id && !showBookmarksOnly ? 'bg-amber-500 text-slate-950 font-bold shadow-lg shadow-amber-500/20' : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white'"
+                    class="px-4 py-2 rounded-lg text-xs md:text-sm whitespace-nowrap transition flex-shrink-0 font-prompt">
+                    <span x-text="cat.name"></span>
+                </button>
+            </template>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-4 py-10">
+        <div class="flex justify-between items-center mb-6 text-slate-400 text-sm">
+            <span>แสดงผล <strong class="text-amber-400" x-text="filteredStrategies.length"></strong> กลยุทธ์</span>
+            <div class="flex items-center gap-3">
+                <span x-show="showBookmarksOnly" class="text-amber-400 font-medium flex items-center gap-1">
+                    <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> แสดงเฉพาะที่บันทึก
+                </span>
+                <span x-show="searchQuery" class="italic">กำลังค้นหา: "<span x-text="searchQuery"></span>"</span>
+                <button x-show="searchQuery || showBookmarksOnly || selectedCategory !== 'all'" @click="resetFilters()" class="text-xs text-amber-400 hover:underline">
+                    ล้างตัวกรอง
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <template x-for="item in filteredStrategies" :key="item.id">
+                <div class="bg-slate-900/90 border border-slate-800 hover:border-amber-500/50 rounded-2xl p-6 flex flex-col justify-between shadow-xl transition-all duration-300 hover:-translate-y-1 group relative">
+                    <!-- Bookmark Icon Button -->
+                    <button @click.stop="toggleBookmark(item.id)" 
+                        class="absolute top-4 right-4 p-2 rounded-xl transition bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-amber-400"
+                        :title="isBookmarked(item.id) ? 'เอาออกจากรายการบันทึก' : 'บันทึกกลยุทธ์นี้'">
+                        <svg class="w-4 h-4" :class="isBookmarked(item.id) ? 'fill-amber-400 text-amber-400' : 'fill-none'" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                        </svg>
+                    </button>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-4 pr-10">
+                            <span class="px-3 py-1 text-xs font-semibold rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 font-prompt" x-text="item.categoryName"></span>
+                            <span class="text-slate-600 font-bold text-lg group-hover:text-amber-500/40 transition">#<span x-text="item.id"></span></span>
+                        </div>
+                        
+                        <h2 class="text-lg font-bold text-white mb-3 group-hover:text-amber-300 transition line-clamp-2" x-text="item.title"></h2>
+                        <p class="text-slate-400 text-sm mb-4 line-clamp-3" x-text="item.context"></p>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-800 flex justify-between items-center">
+                        <span class="text-xs text-slate-500">วิเคราะห์เชิงลึก & วิธีใช้</span>
+                        <button @click="openModal(item)" class="px-4 py-2 bg-amber-500/10 hover:bg-amber-500 text-amber-400 hover:text-slate-950 font-medium text-xs rounded-xl transition flex items-center gap-1.5 font-prompt">
+                            <span>อ่านรายละเอียด</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <!-- Empty State -->
+        <div x-show="filteredStrategies.length === 0" class="text-center py-20">
+            <svg class="w-16 h-16 mx-auto text-slate-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <h3 class="text-lg font-bold text-slate-300 mb-2">ไม่พบกลยุทธ์ที่ค้นหา</h3>
+            <p class="text-slate-500 text-sm mb-6">ลองเปลี่ยนคำค้นหา หรือเลือกหมวดหมู่อื่นดูนะครับ</p>
+            <button @click="resetFilters()" class="px-5 py-2.5 bg-amber-500 text-slate-950 font-semibold text-sm rounded-xl transition">
+                ล้างการค้นหาทั้งหมด
+            </button>
+        </div>
+    </main>
+
+    <div x-show="activeModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm" x-cloak>
+        <div @click.away="closeModal()" class="bg-slate-900 border border-slate-800 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col">
+            <div class="p-6 border-b border-slate-800 flex justify-between items-start sticky top-0 bg-slate-900 z-10">
+                <div>
+                    <span class="px-3 py-1 text-xs font-semibold rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 font-prompt mb-2 inline-block" x-text="currentStrategy.categoryName"></span>
+                    <h2 class="text-xl md:text-2xl font-bold text-white mt-1" x-text="currentStrategy.title"></h2>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button @click="toggleBookmark(currentStrategy.id)" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-amber-400 rounded-xl transition" title="บันทึกกลยุทธ์">
+                        <svg class="w-5 h-5" :class="isBookmarked(currentStrategy.id) ? 'fill-amber-400 text-amber-400' : 'fill-none'" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                        </svg>
+                    </button>
+                    <button @click="closeModal()" class="p-2 text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-xl transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-6 space-y-6 text-slate-300 text-sm md:text-base leading-relaxed">
+                <!-- Context -->
+                <div class="bg-slate-950/60 p-5 rounded-xl border border-slate-800">
+                    <h3 class="text-amber-400 font-bold font-prompt text-base mb-2 flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                        บริบทในซีรีส์ ("พ่อค้าแห่งต้าชิง")
+                    </h3>
+                    <p x-text="currentStrategy.context" class="text-slate-300"></p>
+                </div>
+
+                <!-- Deep Mechanism -->
+                <div class="bg-slate-950/60 p-5 rounded-xl border border-slate-800">
+                    <h3 class="text-amber-400 font-bold font-prompt text-base mb-2 flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+                        กลไกเชิงลึกทางธุรกิจ
+                    </h3>
+                    <p x-text="currentStrategy.mechanism" class="text-slate-300"></p>
+                </div>
+
+                <!-- Application -->
+                <div class="bg-amber-500/10 p-5 rounded-xl border border-amber-500/30">
+                    <h3 class="text-amber-400 font-bold font-prompt text-base mb-2 flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                        การนำไปปรับใช้จริง
+                    </h3>
+                    <p x-text="currentStrategy.application" class="text-amber-100/90"></p>
+                </div>
+            </div>
+
+            <div class="p-6 border-t border-slate-800 flex justify-between items-center bg-slate-900 rounded-b-2xl">
+                <button @click="copyStrategyText(currentStrategy)" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-amber-400 text-xs font-medium rounded-xl transition flex items-center gap-1.5 font-prompt">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                    <span>คัดลอกเนื้อหากลยุทธ์นี้</span>
+                </button>
+                <button @click="closeModal()" class="px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-medium text-sm rounded-xl transition font-prompt">
+                    ปิดหน้าต่าง
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div x-show="toastMessage" x-transition class="fixed bottom-6 right-6 z-50 bg-amber-500 text-slate-950 font-bold px-5 py-3 rounded-xl shadow-2xl flex items-center gap-2 text-sm" x-cloak>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        <span x-text="toastMessage"></span>
+    </div>
+
+    <footer class="border-t border-slate-800/80 mt-20 py-8 bg-slate-900/50 text-center text-slate-500 text-xs">
+        <p>ถอดรหัส 15 กลยุทธ์มหาอำมาตย์พ่อค้า จากซีรีส์ "พ่อค้าแห่งต้าชิง" (Legend of the Magnate)</p>
+        <p class="mt-2 text-slate-600">จัดทำเป็นคู่มืออินเตอร์แอคทีฟเพื่อการศึกษา วิเคราะห์เชิงธุรกิจ และพัฒนาทักษะการต่อรอง</p>
+    </footer>
+
+    <script>
+        function strategyApp() {
+            return {
+                searchQuery: '',
+                selectedCategory: 'all',
+                activeModal: false,
+                showBookmarksOnly: false,
+                currentStrategy: {},
+                bookmarkedIds: JSON.parse(localStorage.getItem('daqing_bookmarks') || '[]'),
+                toastMessage: '',
+                categories: [
+                    { id: 'all', name: 'ทั้งหมด (15 กลยุทธ์)' },
+                    { id: 'cat1', name: '1. การตั้งต้นและมองหาโอกาส' },
+                    { id: 'cat2', name: '2. การแข่งขันและตัดคู่แข่ง' },
+                    { id: 'cat3', name: '3. บริหารความเสี่ยงและห่วงโซ่อุปทาน' },
+                    { id: 'cat4', name: '4. การเมือง กฎหมาย และพันธมิตร' },
+                    { id: 'cat5', name: '5. ทรัพยากรมนุษย์และคุณธรรม' }
+                ],
+                strategies: [
+                    {
+                        id: 1,
+                        categoryId: 'cat1',
+                        categoryName: 'การตั้งต้นและมองหาโอกาส',
+                        title: '1. กลยุทธ์ "เปลี่ยนวิกฤตเป็นโอกาส" จากจุดต่ำสุด (The Zero-Base Strategy)',
+                        context: 'เมื่อ กู่ผิงหยวน บัณฑิตหนุ่มอนาคตไกล ถูกใส่ร้ายจนพลาดการสอบและถูกเนรเทศให้ไปเริ่มต้นชีวิตใหม่จากศูนย์ เขาไม่ได้จมอยู่กับความสิ้นหวัง แต่ใช้ความรู้ ภูมิปัญญา และสายตาที่มองการณ์ไกลมาวิเคราะห์ต้นทุนรอบตัวที่คนอื่นมองข้าม',
+                        mechanism: 'เปลี่ยนสถานะจาก "ผู้ถูกกระทำ" เป็น "ผู้สังเกตการณ์ตลาด" ใช้มันสมองระดับบัณฑิตมาจับจุดอ่อนของระบบเศรษฐกิจชายขอบที่ตระกูลใหญ่ยังเอื้อมไม่ถึง',
+                        application: 'เมื่อต้องเริ่มใหม่ในสถานะที่ไม่มีทุน อย่าเอาเงินไปสู้กับคนมีทุน แต่จงเอา "ความรู้ ความเชี่ยวชาญ และความยืดหยุ่น" ไปอุดช่องว่างที่ตลาดใหญ่ละเลย'
+                    },
+                    {
+                        id: 2,
+                        categoryId: 'cat1',
+                        categoryName: 'การตั้งต้นและมองหาโอกาส',
+                        title: '2. กลยุทธ์ "การตัดวงจรพ่อค้าคนกลาง" (Disintermediation)',
+                        context: 'ในระบบการค้าสินค้าโภคภัณฑ์อย่าง ชา เกลือ และธัญพืช พ่อค้าคนกลางและโกดังสินค้ามักกดขี่ราคารับซื้อจากชาวบ้านและบวกกำไรเพิ่มมหาศาล',
+                        mechanism: 'กู่ผิงหยวนเลือกสร้างเครือข่ายเข้าหาแหล่งผลิตต้นทางโดยตรง ตัดตอนห่วงโซ่อุปทานที่ซ้ำซ้อนออก ทำให้เขาสามารถซื้อในราคายุติธรรมและขายตัดหน้าคู่แข่งได้โดยที่ตัวเองยังมีกำไรสูง',
+                        application: 'การลดขั้นตอนหรือคนกลางที่ไม่จำเป็น ช่วยลดต้นทุน (Cost Reduction) และเพิ่มขีดความสามารถในการแข่งขันด้านราคาอย่างเด็ดขาด'
+                    },
+                    {
+                        id: 3,
+                        categoryId: 'cat1',
+                        categoryName: 'การตั้งต้นและมองหาโอกาส',
+                        title: '3. กลยุทธ์ "การซื้ออนาคตและสร้างกระแสความนิยม" (Pre-selling & Brand Creation)',
+                        context: 'การทำตลาดกับลูกค้าระดับบน ขุนนาง หรือราชสำนัก ไม่ได้ขายแค่ตัวสินค้า แต่ขาย "สถานะทางสังคมและคุณค่าทางจิตใจ"',
+                        mechanism: 'แทนที่จะผลิตสินค้าออกมากองรอระบาย กู่ผิงหยวนใช้จิตวิทยาการตลาดสร้างกระแสความอยากได้อยากมี (Status Symbol) จนทำให้สินค้าธรรมดากลายเป็นของหายาก และเปิดจองล่วงหน้าในราคาสูงลิ่วก่อนผลิตเสร็จ',
+                        application: 'สร้างคุณค่าเชิงแบรนด์ (Brand Value) และกระแสความต้องการล่วงหน้า เพื่อการันตีสภาพคล่องทางการเงินก่อนลงทุนจริง'
+                    },
+                    {
+                        id: 4,
+                        categoryId: 'cat2',
+                        categoryName: 'การแข่งขันและตัดคู่แข่ง',
+                        title: '4. กลยุทธ์การอ่านเกมตลาดและการผูกขาด (Market Positioning & Anti-Monopoly)',
+                        context: 'ตลาดสินค้าสำคัญมักถูกครอบงำด้วยกลุ่มทุนใหญ่และตระกูลผู้มีอิทธิพล จุดตายของการผูกขาดคือ "ความยืดหยุ่นต่ำและต้นทุนการบริหารสูง"',
+                        mechanism: 'เมื่อคู่แข่งพยายามกักตุนสินค้าเพื่อบีบราคา กู่ผิงหยวนจะใช้เครือข่ายพันธมิตรรายย่อยเจาะเส้นทางขนส่งทางเลือก ทลายกำแพงการผูกขาดและทำให้โครงสร้างราคาพังทลายลง',
+                        application: 'อย่าดึงดันแข่งขันในตลาดที่คู่แข่งผูกขาดเบ็ดเสร็จ แต่ให้หาช่องโหว่ สร้างเครือข่ายทางเลือก และโจมตีจุดที่คู่แข่งอุ้ยอ้ายและปรับตัวช้า'
+                    },
+                    {
+                        id: 5,
+                        categoryId: 'cat2',
+                        categoryName: 'การแข่งขันและตัดคู่แข่ง',
+                        title: '5. กลยุทธ์ "สงครามจิตวิทยาและข่าวสาร" (Information & Psychological Warfare)',
+                        context: 'ในสนามธุรกิจ ข่าวสารคือความมั่งคั่ง ใครรู้ก่อน ชนะก่อน',
+                        mechanism: 'กู่ผิงหยวนมักใช้การปล่อยข่าวลวงหรือสร้างกระแสความตื่นตระหนก (Market Sentiment) ให้เกิดขึ้นในตลาด จนทำให้กลุ่มทุนที่กำลังกักตุนสินค้าเกิดความหวาดกลัวและเทขายตัดราคาออกมาในยามวิกฤต จากนั้นจึงเข้าช้อนซื้อรวบกิจการ',
+                        application: 'บริหารจัดการข้อมูลข่าวสารอย่างรอบคอบ ระวังการตกเป็นเหยื่อของข่าวลวง และใช้จังหวะที่ตลาดตื่นตระหนกเข้าซื้อสินทรัพย์ในราคาต่ำสุด (Buy the dip)'
+                    },
+                    {
+                        id: 6,
+                        categoryId: 'cat2',
+                        categoryName: 'การแข่งขันและตัดคู่แข่ง',
+                        title: '6. กลยุทธ์ "การใช้จุดอ่อนของคู่แข่งมาเป็นอาวุธ" (Leveraging Competitor\'s Flaws)',
+                        context: 'ตระกูลพ่อค้าใหญ่หรือขุนนางมักมีความเย่อหยิ่ง ความโลภเกินพอดี หรือมีความขัดแย้งผลประโยชน์ภายในครอบครัว',
+                        mechanism: 'แทนที่จะใช้กำลังปะทะความแข็งแกร่ง กู่ผิงหยวนใช้วิธีหยิบยื่นเหยื่อล่อความโลภ หรือขยายรอยร้าวภายในตระกูลคู่แข่ง จนทำให้คู่แข่งระแวงและทำลายกันเอง',
+                        application: 'วิเคราะห์คู่แข่งให้ออกว่า "ความโลภหรืออีโก้" ของพวกเขาคืออะไร แล้วใช้สิ่งนั้นเป็นกับดักให้คู่แข่งล้มเหลวด้วยน้ำมือของตนเอง'
+                    },
+                    {
+                        id: 7,
+                        categoryId: 'cat3',
+                        categoryName: 'บริหารความเสี่ยงและห่วงโซ่อุปทาน',
+                        title: '7. กลยุทธ์ "การกระจายความเสี่ยงและสร้างห่วงโซ่อุปทานสำรอง"',
+                        context: 'เมื่อกลุ่มผู้มีอิทธิพลใช้อำนาจปิดกั้นเส้นทางขนส่งหลักหรือทำลายแหล่งวัตถุดิบ พ่อค้าทั่วไปมักล้มละลายทันที',
+                        mechanism: 'กู่ผิงหยวนไม่เคยพึ่งพาเส้นทางหรือแหล่งสินค้าเพียงแห่งเดียว เขาสร้างเครือข่ายสำรองและกระจายการลงทุนไปหลายภูมิภาค เพื่อให้มั่นใจว่าธุรกิจจะเดินหน้าต่อได้แม้เกิดภัยพิบัติหรือการปิดกั้น',
+                        application: 'กระจายความเสี่ยง (Diversification) ทั้งแหล่งวัตถุดิบ เส้นทางโลจิสติกส์ และฐานลูกค้า เพื่อป้องกันจุดตายจุดเดียว (Single Point of Failure)'
+                    },
+                    {
+                        id: 8,
+                        categoryId: 'cat3',
+                        categoryName: 'บริหารความเสี่ยงและห่วงโซ่อุปทาน',
+                        title: '8. กลยุทธ์ "การถอยเพื่อรุกและการเสียสละผลประโยชน์ระยะสั้น" (Strategic Retreat)',
+                        context: 'ในจังหวะที่ฝ่ายตรงข้ามกุมอำนาจรัฐและถือไพ่เหนือกว่าอย่างเด็ดขาด การฝืนสู้มีแต่จะพินาศ',
+                        mechanism: 'กล้ายอมขาดทุน ยอมสละตลาด หรือถอนตัวออกจากพื้นที่แข่งขันชั่วคราว เพื่อรักษาเงินสดและกำลังคน รอเวลาที่สถานการณ์พลิกผันค่อยกลับมาตีโต้',
+                        application: 'การถอยไม่ใช่ความพ่ายแพ้ แต่เป็นการอนุรักษ์ทรัพยากรไว้เพื่อรอจังหวะเวลาที่ได้เปรียบกว่า (Timing is everything)'
+                    },
+                    {
+                        id: 9,
+                        categoryId: 'cat4',
+                        categoryName: 'การเมือง กฎหมาย และพันธมิตร',
+                        title: '9. กลยุทธ์ "การใช้หมากการเมืองและกฎหมาย" เป็นเกราะป้องกันธุรกิจ',
+                        context: 'การทำธุรกิจในยุคราชวงศ์ชิงแยกไม่ออกจากอำนาจรัฐและขุนนาง พ่อค้าที่ฉลาดต้องอ่านเกมกฎหมายออก',
+                        mechanism: 'ใช้ความรู้ด้านกฎหมายหรือบทบัญญัติราชสำนักมาหาช่องโหว่ป้องกันตัว และสร้างพันธมิตรกับขุนนางน้ำดีเพื่อใช้เป็นเกราะคุ้มกันจากการรีดไถหรือกลั่นแกล้งจากอำนาจมืด',
+                        application: 'ศึกษาข้อกฎหมาย กฎระเบียบข้อบังคับ และสร้างสัมพันธ์อันดีกับผู้มีอำนาจที่ถูกต้องตามทำนองคลองธรรม เพื่อความมั่นคงทางกฎหมายของธุรกิจ'
+                    },
+                    {
+                        id: 10,
+                        categoryId: 'cat4',
+                        categoryName: 'การเมือง กฎหมาย และพันธมิตร',
+                        title: '10. กลยุทธ์ "การยืมมือคนอื่นมาฆ่าคู่แข่ง" (Borrowing a Knife / Proxy Warfare)',
+                        context: 'เมื่อทุนของตนเองยังเล็กเกินกว่าจะชนกับผู้มีอิทธิพลระดับประเทศ',
+                        mechanism: 'ใช้การชักใยเบื้องหลัง ผลักดันให้คู่แข่งธุรกิจต้องไปขัดแย้งกับกลุ่มอำนาจรัฐหรือขุนนางอีกขั้วหนึ่ง ทำให้ศัตรูห้ำหั่นกันเองโดยที่เรายืนอยู่เหนือความขัดแย้ง',
+                        application: 'ใช้กลไกการตรวจสอบหรือความขัดแย้งของคู่แข่งรายอื่นให้เป็นประโยชน์ โดยที่เราไม่ต้องออกหน้าปะทะเอง'
+                    },
+                    {
+                        id: 11,
+                        categoryId: 'cat4',
+                        categoryName: 'การเมือง กฎหมาย และพันธมิตร',
+                        title: '11. กลยุทธ์ "การใช้ Soft Power และการผูกสัมพันธ์กับชุมชน"',
+                        context: 'พ่อค้าที่หวังแค่กอบโกยเงินทองมักจะถูกขับไล่จากท้องถิ่น แต่กู่ผิงหยวนเลือกซื้อใจมวลชน',
+                        mechanism: 'ให้ความช่วยเหลือชาวบ้านยามเกิดภัยพิบัติ สนับสนุนการศึกษา และจ้างงานที่เป็นธรรม ทำให้ชุมชนและแรงงานลุกขึ้นมาปกป้องธุรกิจของเขาจากผู้มีอิทธิพล',
+                        application: 'การทำ CSR หรือการตอบ "คุณค่าสู่สังคม" อย่างจริงใจ คือเกราะป้องกันที่ดีที่สุดในยามที่ธุรกิจเผชิญวิกฤตศรัทธาหรือภัยคุกคามภายนอก'
+                    },
+                    {
+                        id: 12,
+                        categoryId: 'cat5',
+                        categoryName: 'ทรัพยากรมนุษย์และคุณธรรม',
+                        title: '12. กลยุทธ์ "การซื้อใจคนและการบริหารทรัพยากรบุคคล" (Talent & Loyalty)',
+                        context: 'ทุนที่ยิ่งใหญ่ที่สุดไม่ใช่เงินทอง แต่คือ "บุคลากร ช่างฝีมือ และลูกน้องที่ซื่อสัตย์"',
+                        mechanism: 'กู่ผิงหยวนให้ส่วนแบ่ง สวัสดิการ และเกียรติยศแก่พนักงานอย่างยุติธรรม ทำให้เวลาที่คู่แข่งพยายามทุ่มเงินซื้อตัวพนักงาน ลูกน้องเหล่านี้ก็ยังเลือกอยู่เคียงข้าง',
+                        application: 'ดูแลบุคลากรด้วยใจและผลตอบแทนที่สมเหตุสมผล ความจงรักภักดี (Loyalty) ของคนคือสิ่งที่ไม่สามารถซื้อได้ด้วยเงินเพียงอย่างเดียว'
+                    },
+                    {
+                        id: 13,
+                        categoryId: 'cat5',
+                        categoryName: 'ทรัพยากรมนุษย์และคุณธรรม',
+                        title: '13. กลยุทธ์ "การผูกขาดความไว้วางใจเหนือผลกำไร" (Long-term Trust Monopoly)',
+                        context: 'กำไรระยะสั้นอาจทำให้รวยเป็นครั้งคราว แต่ "สัจจะและคำพูด" ทำให้รวยได้ยั่งยืนตลอดชีวิต',
+                        mechanism: 'แม้บางครั้งจะต้องยอมขาดทุนก้อนโตเพื่อรักษาคำมั่นสัญญาที่ให้ไว้กับคู่ค้า แต่ผลตอบแทนระยะยาวคือความน่าเชื่อถือระดับสูงสุด ทำให้ไม่มีคู่แข่งหน้าไหนแย่งฐานลูกค้าไปได้',
+                        application: 'รักษาคำพูดและรักษามาตรฐานความซื่อสัตย์ เพราะเครดิตและความน่าเชื่อถือคือ "สินทรัพย์ที่ถาวรที่สุด" ของนักธุรกิจ'
+                    },
+                    {
+                        id: 14,
+                        categoryId: 'cat5',
+                        categoryName: 'ทรัพยากรมนุษย์และคุณธรรม',
+                        title: '14. กลยุทธ์ "การซ้อนแผนและตลบหลัง" (Counter-Strategy / Trap Setting)',
+                        context: 'เมื่อรู้ตัวล่วงหน้าว่ากำลังตกเป็นเป้าหมายของการถูกฮุบกิจการหรือโดนวางยา',
+                        mechanism: 'แกล้งทำเป็นเดินตามแผนของคู่แข่ง แสดงความอ่อนแอหรือตกหลุมพรางเพื่อให้ตายใจ และรอจังหวะตลบหลังด้วยหมัดฮุกไม้ตายในวินาทีสุดท้ายที่คู่แข่งไม่ทันตั้งตัว',
+                        application: 'ตั้งรับอย่างมีชั้นเชิง ปิดบังไพ่ตายในมือ และสวนกลับในจุดที่คู่แข่งมั่นใจที่สุดจนพลาดพลั้งมหันต์'
+                    },
+                    {
+                        id: 15,
+                        categoryId: 'cat5',
+                        categoryName: 'ทรัพยากรมนุษย์และคุณธรรม',
+                        title: '15. กลยุทธ์ "การรักษาคุณธรรมท่ามกลางผลประโยชน์" (Ethical Pragmatism)',
+                        context: 'ท่ามกลางยุคสมัยที่เงินทองและอำนาจสามารถซื้อได้ทุกอย่าง การรักษาหลักการและศีลธรรมคือเส้นแบ่งระหว่าง "พ่อค้าผู้ยิ่งใหญ่" กับ "พ่อค้าหน้าเลือด"',
+                        mechanism: 'ใช้กลยุทธ์เล่ห์เหลี่ยมเพื่อจัดการกับคนชั่วและคู่แข่งที่ไร้คุณธรรม แต่ใช้ความจริงใจและความซื่อสัตย์ในการสร้างรากฐานอาณาจักรการค้าให้มั่นคงและยั่งยืนข้ามรุ่น',
+                        application: 'ความสำเร็จที่ยั่งยืนต้องขับเคลื่อนด้วยจริยธรรมทางธุรกิจ (Business Ethics) ควบคู่ไปกับความฉลาดเฉลียวเสมอ'
+                    }
+                ],
+                get filteredStrategies() {
+                    return this.strategies.filter(item => {
+                        const matchesCategory = this.selectedCategory === 'all' || item.categoryId === this.selectedCategory;
+                        const matchesBookmark = !this.showBookmarksOnly || this.bookmarkedIds.includes(item.id);
+                        const q = this.searchQuery.toLowerCase();
+                        const matchesSearch = item.title.toLowerCase().includes(q) ||
+                                              item.context.toLowerCase().includes(q) ||
+                                              item.mechanism.toLowerCase().includes(q) ||
+                                              item.application.toLowerCase().includes(q);
+                        return matchesCategory && matchesBookmark && matchesSearch;
+                    });
+                },
+                isBookmarked(id) {
+                    return this.bookmarkedIds.includes(id);
+                },
+                toggleBookmark(id) {
+                    if (this.isBookmarked(id)) {
+                        this.bookmarkedIds = this.bookmarkedIds.filter(item => item !== id);
+                        this.showToast('นำออกจากรายการบันทึกแล้ว');
+                    } else {
+                        this.bookmarkedIds.push(id);
+                        this.showToast('บันทึกกลยุทธ์สำเร็จ');
+                    }
+                    localStorage.setItem('daqing_bookmarks', JSON.stringify(this.bookmarkedIds));
+                },
+                openModal(item) {
+                    this.currentStrategy = item;
+                    this.activeModal = true;
+                    document.body.style.overflow = 'hidden';
+                },
+                closeModal() {
+                    this.activeModal = false;
+                    document.body.style.overflow = 'auto';
+                },
+                resetFilters() {
+                    this.searchQuery = '';
+                    this.selectedCategory = 'all';
+                    this.showBookmarksOnly = false;
+                },
+                showToast(msg) {
+                    this.toastMessage = msg;
+                    setTimeout(() => {
+                        this.toastMessage = '';
+                    }, 2500);
+                },
+                copyStrategyText(item) {
+                    const text = `${item.title}\n\n[หมวดหมู่]: ${item.categoryName}\n\n[บริบท]: ${item.context}\n\n[กลไกเชิงลึก]: ${item.mechanism}\n\n[การนำไปใช้]: ${item.application}`;
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(text).then(() => {
+                            this.showToast('คัดลอกเนื้อหาเรียบร้อยแล้ว');
+                        }).catch(() => {
+                            this.fallbackCopy(text);
+                        });
+                    } else {
+                        this.fallbackCopy(text);
+                    }
+                },
+                fallbackCopy(text) {
+                    const textarea = document.createElement('textarea');
+                    textarea.value = text;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    try {
+                        document.execCommand('copy');
+                        this.showToast('คัดลอกเนื้อหาเรียบร้อยแล้ว');
+                    } catch (e) {
+                        this.showToast('ไม่สามารถคัดลอกได้');
+                    }
+                    document.body.removeChild(textarea);
+                },
+                exportReport() {
+                    let content = `=== คู่มือ 15 กลยุทธ์มหาอำมาตย์พ่อค้า จากซีรีส์ "พ่อค้าแห่งต้าชิง" ===\n\n`;
+                    this.strategies.forEach(s => {
+                        content += `${s.title}\nหมวดหมู่: ${s.categoryName}\n- บริบท: ${s.context}\n- กลไก: ${s.mechanism}\n- การประยุกต์ใช้: ${s.application}\n\n--------------------------------------------------\n\n`;
+                    });
+                    
+                    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'daqing-15-strategies-guide.txt';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    this.showToast('ดาวน์โหลดรายงานสำเร็จแล้ว');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
